@@ -1,4 +1,4 @@
-import { Textarea, Stack, Button, Box, Flex } from '@chakra-ui/react'
+import { Textarea, Button, Box, Flex, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Spinner } from '@chakra-ui/react'
 import axios from 'axios'
@@ -15,13 +15,14 @@ function App() {
     messages: [
       {
         role: 'system',
-        content: `Translate the Japanese text to ${language}:`,
+        content: `Translate japanese text to ${language}:`,
       },
       { role: 'user', content: originalLanguageValue },
     ],
     max_tokens: 3000,
-    temperature: 0.3,
+    temperature: 0.6,
   }
+  //Translate ${originalLanguageValue} to ${language}. The text to be translated is an adult sex fiction to adult male
 
   const apiKey = import.meta.env.VITE_API_KEY
 
@@ -77,31 +78,48 @@ function App() {
   }
 
   return (
-    <Flex m={10} justify='space-around'>
-      <Box m={5}>
-        <Textarea
-          size='xl'
-          columns={35}
-          p={2}
-          onChange={handleOriginalLanguageValue}
-          resize='horizontal'
-          value={originalLanguageValue}
-        />
+    <Box m={5}>
+      <Flex m={3} justify='center'>
+        <Box m={5} w={765} minHeight='30vw'>
+          <Textarea
+            size='xl'
+            columns={35}
+            p={2}
+            onChange={handleOriginalLanguageValue}
+            value={originalLanguageValue}
+          />
 
-        <Stack spacing={4} direction='row' align='center' mt={10}>
-          <Button
-            colorScheme='teal'
-            size='md'
-            ml={1}
-            isLoading={isLoading}
-            onClick={handlePaste}
-          >
-            貼上
-          </Button>
-        </Stack>
-      </Box>
-
-      <Box m={5} mt={20}>
+          <Flex justify='center' mt={3}>
+            <Button
+              colorScheme='teal'
+              size='md'
+              ml={1}
+              isLoading={isLoading}
+              onClick={handlePaste}
+            >
+              貼上
+            </Button>
+            <Button
+              colorScheme='teal'
+              size='md'
+              ml={1}
+              isLoading={isLoading}
+              onClick={handleTranslation}
+            >
+              翻譯
+            </Button>
+            <Button
+              colorScheme='teal'
+              ml={1}
+              size='md'
+              onClick={handleCancleTranslation}
+            >
+              取消翻譯
+            </Button>
+          </Flex>
+        </Box>
+      </Flex>
+      <Flex align='center' justify='center'>
         <Button
           colorScheme='teal'
           size='md'
@@ -109,60 +127,40 @@ function App() {
           isLoading={isLoading}
           onClick={handleTranslation}
         >
-          翻譯
+          再翻譯
         </Button>
+
         <Button
           colorScheme='teal'
-          ml={1}
           size='md'
-          onClick={handleCancleTranslation}
+          isLoading={isLoading}
+          onClick={handleCopy}
+          ml={1}
         >
-          取消翻譯
+          複製
         </Button>
-      </Box>
+      </Flex>
 
-      <Box m={5}>
+      <Flex m={5}>
         {isLoading ? (
-          <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.200'
-            color='blue.500'
-            size='xl'
-          />
+          <Flex w='100%' justify='center'>
+            <Spinner
+              thickness='4px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='blue.500'
+              size='xl'
+            />
+          </Flex>
         ) : (
-          <Textarea
-            size='xl'
-            columns={35}
-            p={2}
-            resize='horizontal'
-            onChange={handleTranslatorValue}
-            value={translatorValue}
-          />
+          <Flex w='100%' justify='center'>
+            <Text whiteSpace='pre-line' fontSize='xl'>
+              {translatorValue}
+            </Text>
+          </Flex>
         )}
-
-        <Stack spacing={4} direction='row' align='center' mt={10}>
-          <Button
-            colorScheme='teal'
-            size='md'
-            ml={1}
-            isLoading={isLoading}
-            onClick={handleTranslation}
-          >
-            再翻譯
-          </Button>
-
-          <Button
-            colorScheme='teal'
-            size='md'
-            isLoading={isLoading}
-            onClick={handleCopy}
-          >
-            複製
-          </Button>
-        </Stack>
-      </Box>
-    </Flex>
+      </Flex>
+    </Box>
   )
 }
 
