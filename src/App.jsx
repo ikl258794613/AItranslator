@@ -1,7 +1,10 @@
 import { Textarea, Button, Box, Flex, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Spinner } from '@chakra-ui/react'
+import { copy, paste } from './hook/common'
 import axios from 'axios'
+import { names } from './data/name'
+import { List } from './components/List'
 
 function App() {
   const [isLoading, setIsLoading] = useState(false)
@@ -30,16 +33,12 @@ function App() {
     setOriginalLanguageValue(e.target.value)
   }
 
-  const handleTranslatorValue = (e) => {
-    setTranslatorValue(e.target.value)
-  }
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(translatorValue)
+  const handleCopy = () => {
+    copy(translatorValue)
   }
 
   const handlePaste = async () => {
-    const text = await navigator.clipboard.readText()
+    const text = await paste()
     setOriginalLanguageValue(text)
   }
 
@@ -154,12 +153,16 @@ function App() {
           </Flex>
         ) : (
           <Flex w='100%' justify='center'>
-            <Text whiteSpace='pre-line' fontSize='xl'>
+            <Text whiteSpace='pre-line' fontSize='sm'>
               {translatorValue}
             </Text>
           </Flex>
         )}
       </Flex>
+
+      <Box>
+        <List list={names} header='名字' />
+      </Box>
     </Box>
   )
 }
